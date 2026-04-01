@@ -1,26 +1,26 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# ✅ Step 1: Create app FIRST
 app = FastAPI()
 
-# ✅ Step 2: Add middleware
+origins = [
+    "http://localhost:3000",
+    "https://your-frontend-app.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Step 3: Import routes AFTER app creation
-from ai.app.routes import upload   # adjust path if needed
-
-# ✅ Step 4: Register routes
-app.include_router(upload.router)
-
-
+from ai.app.routes import upload
 from ai.app.routes import summarize
+
+app.include_router(upload.router)
 app.include_router(summarize.router)
 
 @app.get("/")
